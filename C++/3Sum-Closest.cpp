@@ -1,3 +1,5 @@
+// 大致思路， 先选定3个数字中的第一个，遍历第一个，其余的从剩下的找
+
 class Solution {
 public:
     int threeSumClosest(vector<int>& nums, int target) {
