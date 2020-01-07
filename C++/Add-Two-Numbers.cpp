@@ -6,49 +6,54 @@
  *     ListNode(int x) : val(x), next(NULL) {}
  * };
  */
+
+// 特别注意最后的进位，这时候需要新建一个node
 class Solution {
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        int carry = 0, num = 0;
-        if (l1 == NULL) return l2;
-        if (l2 == NULL) return l1;
-        ListNode *pre = new ListNode(-1), *cur = pre;
-        while (l1 != NULL && l2 != NULL) {
-        	num = l1->val + l2->val + carry;
-        	carry = num / 10;
-        	num = num % 10;
-        	l1->val = num;
-        	cur -> next = l1;
-        	cur = cur->next;
-        	l1 = l1->next;
-        	l2 = l2->next;
+        ListNode* res = l1;
+        bool inc = 0;
+        while(l1 && l2){
+            int sum = l1->val + l2->val + inc;
+            l1->val = sum % 10;
+            if(sum/10){
+                inc = 1;
+            }else{
+                inc = 0;
+            }
+            if(l1->next == 0){
+                if(l2->next == 0 && inc){
+                    l1->next = new ListNode(1);
+                    return res;
+                }
+                l1->next = l2->next;
+                l1 = l1->next;
+                break;
+            }
+            l1 = l1->next;
+            l2 = l2->next;
         }
-        while (l1 != NULL) {
-        	num = l1->val + carry;
-        	carry = num / 10;
-        	num = num % 10;
-        	l1->val = num;
-        	cur->next = l1;
-        	cur = cur->next;
-        	l1 = l1->next;
+        while(l1){
+            int sum = l1->val + inc;
+            l1->val = sum % 10;
+            if(sum/10){
+                inc = 1;
+                if(l1->next == 0){
+                    l1->next = new ListNode(1);
+                    return res;
+                }
+            }else{
+                inc = 0;
+                break;
+            }
+            l1 = l1->next;
         }
-        while (l2 != NULL) {
-        	num = l2->val + carry;
-        	carry = num / 10;
-        	num = num % 10;
-        	l2->val = num;
-        	cur->next = l2;
-        	cur = cur->next;
-        	l2 = l2->next;
+        if(inc){
+            l1->next = new ListNode(1);
         }
-        if (carry > 0) {
-        	ListNode *temp = new ListNode(carry);
-        	cur->next = temp;
-        }
-        return pre->next;
+        return res;
     }
 };
-
 
 
 
